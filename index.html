@@ -2,24 +2,653 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent 工程发展历程回顾 · 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AGENT ENGINEERING CHRONOLOGY — 2026 年度编年表</title>
 <style>
-  html,body{margin:0;height:100%}
-  body{display:flex;align-items:center;justify-content:center;
-       font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
-       background:#0e1116;color:#8b949e}
-  main{text-align:center;padding:0 1.5rem}
-  h1{font-weight:300;letter-spacing:.2em;color:#c9d1d9;font-size:1.5rem}
-  .year{font-size:.9rem;letter-spacing:.5em;color:#58a6ff;margin-bottom:1.2rem}
-  p{font-size:.85rem;letter-spacing:.15em}
+/* ============================================================
+   STYLE  : 极简 IBM 大型机 / 瑞士企业科技
+   MOTIF  : 面板刻度 + 记录编号 + 发丝栅格
+            （form 来自内容：一份 15 条的系统运行日志）
+   FONTS  : 系统字体栈，零网络字体
+   ============================================================ */
+
+:root{
+  /* 纸面：纯白 */
+  --paper:      oklch(100% 0 0);
+  --paper-2:    oklch(97% 0.003 250);      /* hover / 表头浅灰 */
+  --ink:        oklch(18% 0.010 260);      /* 主文字 */
+  --ink-2:      oklch(43% 0.008 260);      /* 次级 */
+  --ink-3:      oklch(60% 0.006 260);      /* 辅助 / 标注 */
+  --rule:       oklch(84% 0.006 260);      /* 发丝线 */
+  --rule-2:     oklch(72% 0.006 260);
+  --accent:     oklch(52% 0.19 262);       /* IBM 式工程蓝，唯一彩色 */
+  --accent-ink: oklch(98% 0.002 250);
+  --amber:      oklch(72% 0.14 75);        /* 面板指示灯 */
+
+  --mono: ui-monospace, "SF Mono", "IBM Plex Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "IBM Plex Sans", "Segoe UI",
+          "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          "Noto Sans CJK SC", sans-serif;
+
+  --gap: clamp(20px, 4vw, 56px);
+  --col-w: 1440px;
+}
+
+*{ box-sizing:border-box; }
+
+html{ -webkit-text-size-adjust:100%; }
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.75;
+  text-wrap:pretty;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 纸面纹理：极淡的横向扫描线，暗示 CRT / 打印纸 */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    oklch(50% 0.01 260 / 0.018) 3px 4px
+  );
+}
+
+.wrap{
+  position:relative; z-index:1;
+  max-width:var(--col-w);
+  margin:0 auto;
+  padding:0 var(--gap);
+}
+
+::selection{ background:var(--ink); color:var(--paper); }
+
+a{ color:var(--accent); }
+a:focus-visible, button:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+/* ---------- 通用小字标注 ---------- */
+.tag{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+}
+
+/* ============================================================
+   1. MASTHEAD — 大型机面板
+   ============================================================ */
+.masthead{
+  border-bottom:2px solid var(--ink);
+}
+.mh-top{
+  display:flex;
+  align-items:stretch;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+  padding:14px 0;
+  border-bottom:1px solid var(--rule);
+}
+.mh-id{ display:flex; align-items:center; gap:12px; }
+.lamp{
+  width:9px; height:9px; flex:0 0 9px;
+  background:var(--amber);
+  box-shadow:0 0 0 3px oklch(72% 0.14 75 / .18);
+}
+.lamp.on{ animation:blink 2.4s steps(1,end) infinite; }
+@keyframes blink{ 0%,72%{opacity:1} 73%,100%{opacity:.25} }
+
+.mh-meta{
+  display:flex; gap:28px; flex-wrap:wrap;
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.1em;
+  color:var(--ink-2); text-transform:uppercase;
+}
+.mh-meta b{ color:var(--ink); font-weight:600; }
+
+/* 大标题：字重对撞 + 负字距 */
+.mh-title{
+  padding:clamp(28px,5vw,54px) 0 clamp(22px,3vw,34px);
+}
+.mh-title h1{
+  margin:0;
+  font-family:var(--mono);
+  font-size:clamp(28px,6.4vw,80px);
+  line-height:.96;
+  font-weight:700;
+  letter-spacing:-.035em;
+  text-transform:uppercase;
+  text-wrap:balance;
+}
+.mh-title h1 .thin{
+  display:block;
+  font-weight:400;
+  color:var(--ink-3);
+  font-size:.42em;
+  letter-spacing:.02em;
+  line-height:1.3;
+  margin-top:.7em;
+  text-transform:none;
+  font-family:var(--sans);
+  max-width:62ch;
+}
+.mh-sub{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  border-top:1px solid var(--rule);
+  margin-top:clamp(20px,3vw,32px);
+}
+.mh-sub > div{
+  padding:16px 22px 16px 0;
+  border-right:1px solid var(--rule);
+}
+.mh-sub > div:last-child{ border-right:0; }
+.mh-sub dt{ margin:0 0 6px; }
+.mh-sub dd{
+  margin:0;
+  font-size:14.5px;
+  line-height:1.6;
+  color:var(--ink-2);
+}
+.mh-sub dd b{ color:var(--ink); font-weight:600; }
+
+/* ---------- 刻度尺 ---------- */
+.ruler{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  height:26px;
+  border-bottom:2px solid var(--ink);
+}
+.ruler span{
+  border-left:1px solid var(--rule-2);
+  position:relative;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.08em;
+  color:var(--ink-3);
+  padding:2px 0 0 5px;
+}
+.ruler span:first-child{ border-left:0; }
+.ruler span::after{
+  content:"";
+  position:absolute; left:0; bottom:0;
+  width:1px; height:9px;
+  background:var(--rule-2);
+}
+
+/* ============================================================
+   2. TABLE — 记录表
+   ============================================================ */
+.sheet{ padding-bottom:8px; }
+
+.head-row, .rec{
+  display:grid;
+  grid-template-columns:56px 132px minmax(0,1.05fr) minmax(0,1.5fr) minmax(0,1.25fr);
+  gap:0 clamp(14px,2vw,30px);
+}
+
+.head-row{
+  position:sticky; top:0; z-index:15;
+  background:var(--paper);
+  border-top:2px solid var(--ink);
+  border-bottom:1px solid var(--ink);
+  padding:9px 0;
+}
+.head-row span{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+}
+
+.rec{
+  border-bottom:1px solid var(--rule);
+  padding:20px 0;
+  align-items:start;
+  position:relative;
+  transition:background-color .18s ease;
+  cursor:default;
+}
+.rec:hover{ background:var(--paper-2); }
+.rec > *{ padding-right:clamp(10px,1.4vw,20px); }
+
+/* 编号：大型机记录号 */
+.rec .no{
+  font-family:var(--mono);
+  font-size:12.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  color:var(--ink-3);
+  padding-top:3px;
+  border-left:2px solid transparent;
+  transition:border-color .18s ease, color .18s ease;
+}
+.rec:hover .no{ color:var(--ink); border-left-color:var(--accent); }
+
+.rec .when{
+  font-family:var(--mono);
+  font-size:12.5px;
+  font-weight:600;
+  letter-spacing:.04em;
+  color:var(--ink);
+  padding-top:2px;
+  line-height:1.55;
+}
+.rec .when em{
+  display:block;
+  font-style:normal;
+  font-family:var(--sans);
+  font-weight:400;
+  font-size:11px;
+  letter-spacing:.1em;
+  color:var(--ink-3);
+  margin-top:3px;
+  text-transform:uppercase;
+}
+
+.rec .topic{
+  font-size:16.5px;
+  font-weight:600;
+  line-height:1.45;
+  letter-spacing:-.012em;
+  color:var(--ink);
+}
+.rec .desc{
+  font-size:14.5px;
+  line-height:1.72;
+  color:var(--ink-2);
+}
+.rec .prod{
+  font-size:14px;
+  line-height:1.68;
+  color:var(--ink-2);
+}
+.rec .prod a{
+  color:var(--ink);
+  text-decoration:none;
+  border-bottom:1px solid var(--rule-2);
+  transition:border-color .16s ease, color .16s ease;
+}
+.rec .prod a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
+.rec .prod .sep{ color:var(--ink-3); padding:0 4px; font-family:var(--mono); }
+
+/* 入场：刻度扫描 */
+.rec{ animation:none; }
+.rec.in{ animation:slide .42s cubic-bezier(.2,.7,.3,1) both; }
+@keyframes slide{
+  from{ opacity:0; transform:translateY(6px); }
+  to{ opacity:1; transform:none; }
+}
+
+/* ============================================================
+   4. FOOTER — 来源登记
+   ============================================================ */
+.sources{
+  border-top:2px solid var(--ink);
+  margin-top:36px;
+  padding:34px 0 44px;
+}
+.sources h2{
+  margin:0 0 20px;
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  font-weight:600;
+  color:var(--ink);
+}
+.src-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+}
+.src-grid a{
+  display:flex; gap:12px; align-items:baseline;
+  background:var(--paper);
+  padding:13px 16px;
+  text-decoration:none;
+  transition:background-color .16s ease;
+}
+.src-grid a:hover{ background:var(--paper-2); }
+.src-grid .idx{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--ink-3);
+  flex:0 0 24px;
+  letter-spacing:.06em;
+}
+.src-grid .t{
+  font-size:13.5px;
+  line-height:1.5;
+  color:var(--ink);
+}
+.src-grid a:hover .t{ color:var(--accent); }
+.src-grid .d{
+  display:block;
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.04em;
+  color:var(--ink-3);
+  margin-top:2px;
+  word-break:break-all;
+}
+
+.colophon{
+  border-top:1px solid var(--rule);
+  padding:20px 0 40px;
+  display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
+}
+.colophon p{
+  margin:0;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+}
+
+/* ---------- 窄屏：记录转为堆叠卡 ---------- */
+@media (max-width:900px){
+  .head-row{ display:none; }
+  .rec, .head-row{ grid-template-columns:1fr; }
+  .rec{ padding:22px 0 24px; gap:10px; }
+  .rec > *{ padding-right:0; }
+  .rec .no{
+    display:inline-block;
+    border-left:0;
+    border-top:2px solid var(--ink);
+    padding:6px 0 0;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; }
+  .lamp.on{ opacity:1; }
+}
+
+@media print{
+  body::before{ display:none; }
+}
 </style>
 </head>
 <body>
-<main>
-  <div class="year">2 0 2 6</div>
-  <h1>Agent 工程发展历程回顾</h1>
-  <p>AGENT ENGINEERING · YEAR IN REVIEW · 页面待更新</p>
+
+<!-- ==================== MASTHEAD ==================== -->
+<header class="masthead">
+  <div class="wrap">
+    <div class="mh-top">
+      <div class="mh-id">
+        <span class="lamp on" aria-hidden="true"></span>
+        <span class="tag">SYSTEM&nbsp;LOG&nbsp;/&nbsp;AGENT&nbsp;ENGINEERING&nbsp;·&nbsp;UNIT&nbsp;01</span>
+      </div>
+      <div class="mh-meta">
+        <span>REV <b>2026.09</b></span>
+        <span>SPAN <b>JAN — SEP</b></span>
+        <span>RECORDS <b>15</b></span>
+        <span>CLASS <b>PUBLIC</b></span>
+      </div>
+    </div>
+
+    <div class="mh-title">
+      <h1>Agent Engineering<br>Chronology
+        <span class="thin">2026 年度 AI Agent 工程演进编年表 —— 从并行会话、规格与上下文工程，到软件工厂、Loop engineering 与 Graph engineering 的体系化。按时间顺序登记 15 条关注热点、其解决的问题与代表产品实践。</span>
+      </h1>
+
+      <dl class="mh-sub">
+        <div>
+          <dt class="tag">读法 / How to read</dt>
+          <dd>每行一条记录：<b>编号 · 时间 · 热点 · 解决的问题 · 代表产品</b>。按时间顺序自上而下登记。</dd>
+        </div>
+        <div>
+          <dt class="tag">演进主线 / Trajectory</dt>
+          <dd>单 Agent 执行 → <b>并行与会话管理</b> → 规格与上下文沉淀 → <b>编排与循环体系</b> → 持久团队与长期项目。</dd>
+        </div>
+        <div>
+          <dt class="tag">登记范围 / Scope</dt>
+          <dd>覆盖 <b>1 月至 9 月</b>的公开实践与产品发布，含年初延续项；来源见文末 13 条原始链接。</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="ruler" aria-hidden="true">
+      <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span>
+      <span>07</span><span>08</span><span>09</span><span>10</span><span>11</span><span>12</span>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== SHEET ==================== -->
+<main class="wrap sheet">
+  <div class="head-row" aria-hidden="true">
+    <span>REC</span>
+    <span>今年时间</span>
+    <span>关注热点／产品形态</span>
+    <span>主要关注点、解决的问题</span>
+    <span>代表产品／实践</span>
+  </div>
+
+  <div id="records">
+
+    <article class="rec">
+      <div class="no">01</div>
+      <div class="when">年初延续<em>Carry-over</em></div>
+      <div class="topic">并行会话与任务管理</div>
+      <div class="desc">同时运行多个 Agent，隔离工作区，管理任务和执行进度。</div>
+      <div class="prod">Claude Squad<span class="sep">/</span>Mux·Xum<span class="sep">/</span>cmux<span class="sep">/</span>Vibe Kanban</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">02</div>
+      <div class="when">年初延续<em>Carry-over</em></div>
+      <div class="topic">规格、Skills 与上下文工程</div>
+      <div class="desc">明确目标，复用方法，保存任务状态，减少跨会话信息丢失。</div>
+      <div class="prod">Spec Kit<span class="sep">/</span>OpenSpec<span class="sep">/</span>Superpowers<span class="sep">/</span>GSD<span class="sep">/</span>Beads</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">03</div>
+      <div class="when">1 月<em>January</em></div>
+      <div class="topic">Ralph 持续执行热潮</div>
+      <div class="desc">让 Agent 反复执行、检查、修复，直到满足停止条件。</div>
+      <div class="prod"><a href="https://www.humanlayer.dev/blog/brief-history-of-ralph" target="_blank" rel="noopener">Ralph Wiggum loop</a></div>
+    </article>
+
+    <article class="rec">
+      <div class="no">04</div>
+      <div class="when">1—2 月<em>Jan — Feb</em></div>
+      <div class="topic">多 Agent 团队协作</div>
+      <div class="desc">从同时启动多个 Agent，发展到自动分工、通信和任务交接。</div>
+      <div class="prod"><a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04" target="_blank" rel="noopener">Gas Town</a><span class="sep">/</span>Claude Code Agent Teams</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">05</div>
+      <div class="when">1—2 月<em>Jan — Feb</em></div>
+      <div class="topic">常驻个人／工作 Agent</div>
+      <div class="desc">长期在线，通过消息入口接收任务，保留记忆并跨应用工作。</div>
+      <div class="prod"><a href="https://openclaw.ai/blog/introducing-openclaw" target="_blank" rel="noopener">OpenClaw</a><span class="sep">/</span>Hermes Agent</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">06</div>
+      <div class="when">2 月<em>February</em></div>
+      <div class="topic">Harness 工程</div>
+      <div class="desc">建设工具、上下文、运行环境、验证与恢复机制，让 Agent 可靠工作。</div>
+      <div class="prod">OpenCode<span class="sep">/</span>Pi<span class="sep">/</span><a href="https://openai.com/index/harness-engineering/" target="_blank" rel="noopener">OpenAI Harness Engineering 实践</a></div>
+    </article>
+
+    <article class="rec">
+      <div class="no">07</div>
+      <div class="when">2 月前后<em>Around Feb</em></div>
+      <div class="topic">软件工厂</div>
+      <div class="desc">将规格、执行、编排、场景验收和反馈修正组合成完整的软件交付系统。</div>
+      <div class="prod"><a href="https://factory.strongdm.ai/" target="_blank" rel="noopener">StrongDM Software Factory</a><span class="sep">/</span>Attractor</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">08</div>
+      <div class="when">3 月<em>March</em></div>
+      <div class="topic">后台与事件驱动自动化</div>
+      <div class="desc">让定时任务、工单或外部事件自动触发 Agent 工作。</div>
+      <div class="prod"><a href="https://cursor.com/blog/automations" target="_blank" rel="noopener">Cursor Automations</a></div>
+    </article>
+
+    <article class="rec">
+      <div class="no">09</div>
+      <div class="when">3 月<em>March</em></div>
+      <div class="topic">评测驱动的自主实验</div>
+      <div class="desc">自动修改、实验、评估，保留有效改动，持续优化结果。</div>
+      <div class="prod"><a href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener">autoresearch</a></div>
+    </article>
+
+    <article class="rec">
+      <div class="no">10</div>
+      <div class="when">4—5 月<em>Apr — May</em></div>
+      <div class="topic">Agent 工作台与交付控制面</div>
+      <div class="desc">统一管理任务、本地／云端执行、检查、评审和合并。</div>
+      <div class="prod"><a href="https://cursor.com/blog/cursor-3" target="_blank" rel="noopener">Cursor 3</a><span class="sep">/</span>Symphony<span class="sep">/</span>GitHub Copilot App</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">11</div>
+      <div class="when">4—5 月<em>Apr — May</em></div>
+      <div class="topic">托管运行与验收驱动执行</div>
+      <div class="desc">持久保存状态、恢复长任务，由独立评审机制检查成果并反馈修正。</div>
+      <div class="prod"><a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener">Claude Managed Agents</a><span class="sep">/</span>Outcomes</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">12</div>
+      <div class="when">5 月末—6 月<em>Late May — Jun</em></div>
+      <div class="topic">动态工作流与程序化编排</div>
+      <div class="desc">Agent 按任务生成编排脚本，组织并行子 Agent，验证并汇总产物。</div>
+      <div class="prod"><a href="https://claude.com/blog/introducing-dynamic-workflows-in-claude-code" target="_blank" rel="noopener">Claude Code Dynamic Workflows</a></div>
+    </article>
+
+    <article class="rec">
+      <div class="no">13</div>
+      <div class="when">6 月<em>June</em></div>
+      <div class="topic">Loop engineering 体系化</div>
+      <div class="desc">组合执行、验证、事件触发和改进循环，让系统持续驱动 Agent。</div>
+      <div class="prod">Loopcraft<span class="sep">/</span><a href="https://www.langchain.com/blog/the-art-of-loop-engineering" target="_blank" rel="noopener">LangChain Loop Engineering 实践</a></div>
+    </article>
+
+    <article class="rec">
+      <div class="no">14</div>
+      <div class="when">7 月中下旬<em>Mid — Late Jul</em></div>
+      <div class="topic">Graph engineering 讨论升温</div>
+      <div class="desc">用步骤、产物、结构化状态和验收条件，控制推进、返工与交接。</div>
+      <div class="prod"><a href="https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph" target="_blank" rel="noopener">LangGraph</a><span class="sep">/</span>新版 Archon<span class="sep">/</span>OmO·oh-my-openagent</div>
+    </article>
+
+    <article class="rec">
+      <div class="no">15</div>
+      <div class="when">8—9 月<em>Aug — Sep</em></div>
+      <div class="topic">持久 Agent 团队与长期项目</div>
+      <div class="desc">让协调者管理并行线程、共享上下文和跨应用工作，持续负责项目。</div>
+      <div class="prod"><a href="https://x.ai/news/introducing-grok-bot" target="_blank" rel="noopener">Grok Bot</a><span class="sep">/</span>Cursor Projects<span class="sep">/</span>Claude Code Projects</div>
+    </article>
+
+  </div>
 </main>
+
+<!-- ==================== SOURCES ==================== -->
+<footer class="wrap">
+  <section class="sources">
+    <h2>Sources&nbsp;/&nbsp;来源登记 — 13 entries</h2>
+    <div class="src-grid">
+      <a href="https://www.humanlayer.dev/blog/brief-history-of-ralph" target="_blank" rel="noopener">
+        <span class="idx">[01]</span>
+        <span><span class="t">A Brief History of Ralph</span><span class="d">www.humanlayer.dev</span></span>
+      </a>
+      <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04" target="_blank" rel="noopener">
+        <span class="idx">[02]</span>
+        <span><span class="t">Welcome to Gas Town — Steve Yegge</span><span class="d">steve-yegge.medium.com</span></span>
+      </a>
+      <a href="https://openclaw.ai/blog/introducing-openclaw" target="_blank" rel="noopener">
+        <span class="idx">[03]</span>
+        <span><span class="t">Introducing OpenClaw</span><span class="d">openclaw.ai</span></span>
+      </a>
+      <a href="https://openai.com/index/harness-engineering/" target="_blank" rel="noopener">
+        <span class="idx">[04]</span>
+        <span><span class="t">Harness engineering: leveraging Codex in an agent-first world</span><span class="d">openai.com</span></span>
+      </a>
+      <a href="https://factory.strongdm.ai/" target="_blank" rel="noopener">
+        <span class="idx">[05]</span>
+        <span><span class="t">StrongDM Software Factory</span><span class="d">factory.strongdm.ai</span></span>
+      </a>
+      <a href="https://cursor.com/blog/automations" target="_blank" rel="noopener">
+        <span class="idx">[06]</span>
+        <span><span class="t">Build agents that run automatically</span><span class="d">cursor.com</span></span>
+      </a>
+      <a href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener">
+        <span class="idx">[07]</span>
+        <span><span class="t">karpathy/autoresearch — AI agents running research on single-GPU nanochat training</span><span class="d">github.com</span></span>
+      </a>
+      <a href="https://cursor.com/blog/cursor-3" target="_blank" rel="noopener">
+        <span class="idx">[08]</span>
+        <span><span class="t">Meet the new Cursor</span><span class="d">cursor.com</span></span>
+      </a>
+      <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener">
+        <span class="idx">[09]</span>
+        <span><span class="t">Scaling Managed Agents: Decoupling the brain from the hands — Anthropic</span><span class="d">www.anthropic.com</span></span>
+      </a>
+      <a href="https://claude.com/blog/introducing-dynamic-workflows-in-claude-code" target="_blank" rel="noopener">
+        <span class="idx">[10]</span>
+        <span><span class="t">Introducing dynamic workflows in Claude Code</span><span class="d">claude.com</span></span>
+      </a>
+      <a href="https://www.langchain.com/blog/the-art-of-loop-engineering" target="_blank" rel="noopener">
+        <span class="idx">[11]</span>
+        <span><span class="t">The Art of Loop Engineering</span><span class="d">www.langchain.com</span></span>
+      </a>
+      <a href="https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph" target="_blank" rel="noopener">
+        <span class="idx">[12]</span>
+        <span><span class="t">3 Years of Graph Engineering with LangGraph</span><span class="d">www.langchain.com</span></span>
+      </a>
+      <a href="https://x.ai/news/introducing-grok-bot" target="_blank" rel="noopener">
+        <span class="idx">[13]</span>
+        <span><span class="t">Introducing Grok Bot</span><span class="d">x.ai</span></span>
+      </a>
+    </div>
+  </section>
+
+  <div class="colophon">
+    <p>Agent Engineering Chronology · 2026 · 15 records</p>
+    <p>Typeset in system mono / sans · No web fonts</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var records = Array.prototype.slice.call(document.querySelectorAll('.rec'));
+  // 入场：仅在支持 IO 且未要求减少动画时启用
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if('IntersectionObserver' in window && !reduce){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin:'0px 0px -8% 0px', threshold:0.05 });
+    records.forEach(function(r){ io.observe(r); });
+  }
+})();
+</script>
 </body>
 </html>
